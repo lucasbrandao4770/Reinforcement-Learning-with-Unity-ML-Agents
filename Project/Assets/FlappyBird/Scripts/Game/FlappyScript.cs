@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class FlappyScript : MonoBehaviour
 {
+    public event EventHandler<CollisionEventArgs> OnCollision;
+
     public AudioClip FlyAudioClip, DeathAudioClip, ScoredAudioClip;
     public Sprite GetReadySprite;
     public float RotateUpSpeed = 1, RotateDownSpeed = 1;
@@ -22,6 +25,17 @@ public class FlappyScript : MonoBehaviour
     enum FlappyYAxisTravelState
     {
         GoingUp, GoingDown
+    }
+
+    // Class to encapsulate collision details
+    public class CollisionEventArgs : EventArgs
+    {
+        public string Tag { get; }
+
+        public CollisionEventArgs(string tag)
+        {
+            Tag = tag;
+        }
     }
 
     // Update is called once per frame
@@ -98,6 +112,25 @@ public class FlappyScript : MonoBehaviour
         }
     }
 
+    public void HandleCollision(string tag)
+    {
+        if (tag == "Pipeblank")
+        {
+            GetComponent<AudioSource>().PlayOneShot(ScoredAudioClip);
+            ScoreManagerScript.Score++;
+
+            // Notify subscribers about the checkpoint
+            OnCollision?.Invoke(this, new CollisionEventArgs("Pipeblank"));
+        }
+        else if (tag == "Pipe" || tag == "Floor")
+        {
+            FlappyDies();
+
+            // Notify subscribers about the game-ending collision
+            OnCollision?.Invoke(this, new CollisionEventArgs(tag));
+        }
+    }
+
     void FixedUpdate()
     {
         // Just jump up and down on intro screen
@@ -168,34 +201,38 @@ public class FlappyScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         if (GameStateManager.GameState == GameState.Playing)
-        {
-            if (col.gameObject.tag == "Pipeblank") // Pipeblank is an empty gameobject with a collider between the two pipes
-            {
-                GetComponent<AudioSource>().PlayOneShot(ScoredAudioClip);
-                ScoreManagerScript.Score++;
-            }
-            else if (col.gameObject.tag == "Pipe")
-            {
-                FlappyDies();
-            }
-        }
+            HandleCollision(col.tag);
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         if (GameStateManager.GameState == GameState.Playing)
-        {
-            if (col.gameObject.tag == "Floor")
-            {
-                FlappyDies();
-            }
-        }
+            HandleCollision(col.gameObject.tag);
     }
+
 
     void FlappyDies()
     {
         GameStateManager.GameState = GameState.Dead;
         DeathGUI.SetActive(true);
         GetComponent<AudioSource>().PlayOneShot(DeathAudioClip);
+    }
+
+    // ==============================================================
+    //        API for the ML-Agents to control the Flappy Bird
+    // ==============================================================
+
+    public void Jump()
+    {
+        if (GameStateManager.GameState == GameState.Playing)
+        {
+            BoostOnYAxis();
+        }
+    }
+
+    public void ResetGame()
+    {
+        GameStateManager.GameState = GameState.Intro;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

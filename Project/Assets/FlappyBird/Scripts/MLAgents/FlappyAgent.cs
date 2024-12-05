@@ -11,6 +11,22 @@ public class FlappyAgent : Agent
     public override void Initialize()
     {
         flappy = GetComponentInChildren<FlappyScript>();
+
+        // Subscribe to the collision event
+        flappy.OnCollision += HandleFlappyCollision;
+    }
+
+    private void HandleFlappyCollision(object sender, FlappyScript.CollisionEventArgs e)
+    {
+        if (e.Tag == "Pipeblank")
+        {
+            AddReward(1.0f); // Reward for passing a checkpoint
+        }
+        else if (e.Tag == "Pipe" || e.Tag == "Floor")
+        {
+            AddReward(-1.0f); // Penalty for hitting an obstacle
+            EndEpisode(); // End the episode
+        }
     }
 
     public override void OnEpisodeBegin()
@@ -47,24 +63,11 @@ public class FlappyAgent : Agent
 
     private void ResetFlappy()
     {
-        #TODO: should request the flappy script to reset the game state
+        //#TODO: should request the flappy script to reset the game state
     }
 
     private void CheckEpisodeEndConditions()
     {
         // Placeholder: End the episode if the bird hits the ground, a pipe, or goes out of bounds
-    }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.CompareTag("Pipeblank"))
-        {
-            AddReward(1.0f); // Reward for passing a pipe
-        }
-        else if (col.CompareTag("Pipe") || col.CompareTag("Floor"))
-        {
-            AddReward(-1.0f); // Penalty for hitting obstacles
-            EndEpisode(); // End the episode
-        }
     }
 }
