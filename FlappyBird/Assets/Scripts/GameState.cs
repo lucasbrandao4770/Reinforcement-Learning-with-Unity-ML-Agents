@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 public enum GameState
 {
     Intro,
@@ -19,8 +18,4 @@ public static class GameStateManager
     {
         GameState = GameState.Intro;
     }
-
-
-
 }
-

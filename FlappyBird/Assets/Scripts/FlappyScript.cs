@@ -7,7 +7,6 @@ using System.Collections;
 /// </summary>
 public class FlappyScript : MonoBehaviour
 {
-
     public AudioClip FlyAudioClip, DeathAudioClip, ScoredAudioClip;
     public Sprite GetReadySprite;
     public float RotateUpSpeed = 1, RotateDownSpeed = 1;
@@ -15,12 +14,6 @@ public class FlappyScript : MonoBehaviour
     public Collider2D restartButtonGameCollider;
     public float VelocityPerJump = 3;
     public float XSpeed = 1;
-
-    // Use this for initialization
-    void Start()
-    {
-
-    }
 
     FlappyYAxisTravelState flappyYAxisTravelState;
 
@@ -33,7 +26,7 @@ public class FlappyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //handle back key in Windows Phone
+        // Handle back key in Windows Phone
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
 
@@ -68,7 +61,7 @@ public class FlappyScript : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
                 contactPoint = Input.mousePosition;
 
-            //check if user wants to restart the game
+            // Check if user wants to restart the game
             if (restartButtonGameCollider == Physics2D.OverlapPoint
                 (Camera.main.ScreenToWorldPoint(contactPoint)))
             {
@@ -76,18 +69,16 @@ public class FlappyScript : MonoBehaviour
                 Application.LoadLevel(Application.loadedLevelName);
             }
         }
-
     }
-
 
     void FixedUpdate()
     {
-        //just jump up and down on intro screen
+        // Just jump up and down on intro screen
         if (GameStateManager.GameState == GameState.Intro)
         {
-            if (GetComponent<Rigidbody2D>().linearVelocity.y < -1) //when the speed drops, give a boost
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0, GetComponent<Rigidbody2D>().mass * 5500 * Time.deltaTime)); //lots of play and stop 
-                                                        //and play and stop etc to find this value, feel free to modify
+            if (GetComponent<Rigidbody2D>().linearVelocity.y < -1) // When the speed drops, give a boost
+                GetComponent<Rigidbody2D>().AddForce(new Vector2(0, GetComponent<Rigidbody2D>().mass * 5500 * Time.deltaTime)); // Lots of play and stop
+                                                        // and play and stop etc to find this value, feel free to modify
         }
         else if (GameStateManager.GameState == GameState.Playing || GameStateManager.GameState == GameState.Dead)
         {
@@ -97,7 +88,7 @@ public class FlappyScript : MonoBehaviour
 
     bool WasTouchedOrClicked()
     {
-        if (Input.GetButtonUp("Jump") || Input.GetMouseButtonDown(0) || 
+        if (Input.GetButtonUp("Jump") || Input.GetMouseButtonDown(0) ||
             (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended))
             return true;
         else
@@ -114,8 +105,6 @@ public class FlappyScript : MonoBehaviour
         GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, VelocityPerJump);
         GetComponent<AudioSource>().PlayOneShot(FlyAudioClip);
     }
-
-
 
     /// <summary>
     /// when the flappy goes up, it'll rotate up to 45 degrees. when it falls, rotation will be -90 degrees min
@@ -138,9 +127,9 @@ public class FlappyScript : MonoBehaviour
             default:
                 break;
         }
-        //solution with negative eulerAngles found here: http://answers.unity3d.com/questions/445191/negative-eular-angles.html
+        // Solution with negative eulerAngles found here: http://answers.unity3d.com/questions/445191/negative-eular-angles.html
 
-        //clamp the values so that -90<rotation<45 *always*
+        // Clamp the values so that -90<rotation<45 *always*
         birdRotation = new Vector3(0, 0, Mathf.Clamp(birdRotation.z + degreesToAdd, -90, 45));
         transform.eulerAngles = birdRotation;
     }
@@ -153,7 +142,7 @@ public class FlappyScript : MonoBehaviour
     {
         if (GameStateManager.GameState == GameState.Playing)
         {
-            if (col.gameObject.tag == "Pipeblank") //pipeblank is an empty gameobject with a collider between the two pipes
+            if (col.gameObject.tag == "Pipeblank") // Pipeblank is an empty gameobject with a collider between the two pipes
             {
                 GetComponent<AudioSource>().PlayOneShot(ScoredAudioClip);
                 ScoreManagerScript.Score++;
@@ -182,5 +171,4 @@ public class FlappyScript : MonoBehaviour
         DeathGUI.SetActive(true);
         GetComponent<AudioSource>().PlayOneShot(DeathAudioClip);
     }
-
 }
