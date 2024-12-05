@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-
 public class PipeDestroyerScript : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D col)

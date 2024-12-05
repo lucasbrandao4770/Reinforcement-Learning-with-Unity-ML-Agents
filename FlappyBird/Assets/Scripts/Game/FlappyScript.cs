@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Spritesheet for Flappy Bird found here: http://www.spriters-resource.com/mobile_phone/flappybird/sheet/59537/
@@ -93,7 +94,7 @@ public class FlappyScript : MonoBehaviour
         if (restartButtonGameCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(contactPoint)))
         {
             GameStateManager.GameState = GameState.Intro;
-            Application.LoadLevel(Application.loadedLevelName);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -133,7 +134,7 @@ public class FlappyScript : MonoBehaviour
     }
 
     /// <summary>
-    /// when the flappy goes up, it'll rotate up to 45 degrees. when it falls, rotation will be -90 degrees min
+    /// When the flappy goes up, it'll rotate up to 45 degrees. when it falls, rotation will be -90 degrees min
     /// </summary>
     private void FixFlappyRotation()
     {
@@ -161,7 +162,7 @@ public class FlappyScript : MonoBehaviour
     }
 
     /// <summary>
-    /// check for collision with pipes
+    /// Check for collision with pipes
     /// </summary>
     /// <param name="col"></param>
     void OnTriggerEnter2D(Collider2D col)
