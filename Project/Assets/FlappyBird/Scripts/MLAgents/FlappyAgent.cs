@@ -3,20 +3,19 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
 
+
 public class FlappyAgent : Agent
 {
-    private FlappyScript flappy; // Reference to the FlappyScript
+    private FlappyScript flappy;
 
-    // Initialize the agent and set up any required references
     public override void Initialize()
     {
-        // Functionality to be added later
+        flappy = GetComponentInChildren<FlappyScript>();
     }
 
-    // Called at the beginning of each episode
     public override void OnEpisodeBegin()
     {
-        // Functionality to be added later
+        ResetFlappy();
     }
 
     // Collect observations about the environment
@@ -28,7 +27,16 @@ public class FlappyAgent : Agent
     // Perform actions based on decisions made by the model
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // Functionality to be added later
+        bool doJump = actions.DiscreteActions[0] == 1;
+
+        if (doJump)
+        {
+            flappy.Jump();
+        }
+
+
+
+        CheckEpisodeEndConditions();
     }
 
     // Optional: Manual control for testing the agent
@@ -37,15 +45,26 @@ public class FlappyAgent : Agent
         // Functionality to be added later
     }
 
-    // Optional: Add custom reward logic
-    private void AddRewardForPassingCheckpoint()
+    private void ResetFlappy()
     {
-        // Functionality to be added later
+        #TODO: should request the flappy script to reset the game state
     }
 
-    // Optional: End the episode manually based on custom conditions
-    private void EndEpisodeIfOutOfBounds()
+    private void CheckEpisodeEndConditions()
     {
-        // Functionality to be added later
+        // Placeholder: End the episode if the bird hits the ground, a pipe, or goes out of bounds
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Pipeblank"))
+        {
+            AddReward(1.0f); // Reward for passing a pipe
+        }
+        else if (col.CompareTag("Pipe") || col.CompareTag("Floor"))
+        {
+            AddReward(-1.0f); // Penalty for hitting obstacles
+            EndEpisode(); // End the episode
+        }
     }
 }
