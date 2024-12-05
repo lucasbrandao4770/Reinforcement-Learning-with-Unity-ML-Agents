@@ -14,6 +14,7 @@ public class FlappyScript : MonoBehaviour
     public Collider2D restartButtonGameCollider;
     public float VelocityPerJump = 3;
     public float XSpeed = 1;
+    Vector3 birdRotation = Vector3.zero;
 
     FlappyYAxisTravelState flappyYAxisTravelState;
 
@@ -22,52 +23,77 @@ public class FlappyScript : MonoBehaviour
         GoingUp, GoingDown
     }
 
-    Vector3 birdRotation = Vector3.zero;
     // Update is called once per frame
     void Update()
     {
         // Handle back key in Windows Phone
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Application.Quit();
-
-        if (GameStateManager.GameState == GameState.Intro)
-        {
-            MoveBirdOnXAxis();
-            if (WasTouchedOrClicked())
-            {
-                BoostOnYAxis();
-                GameStateManager.GameState = GameState.Playing;
-                IntroGUI.SetActive(false);
-                ScoreManagerScript.Score = 0;
-            }
         }
 
-        else if (GameStateManager.GameState == GameState.Playing)
+        // Use a switch statement to handle different game states
+        switch (GameStateManager.GameState)
         {
-            MoveBirdOnXAxis();
-            if (WasTouchedOrClicked())
-            {
-                BoostOnYAxis();
-            }
+            case GameState.Intro:
+                HandleIntroState();
+                break;
 
+            case GameState.Playing:
+                HandlePlayingState();
+                break;
+
+            case GameState.Dead:
+                HandleDeadState();
+                break;
+
+            default:
+                Debug.LogWarning("Unhandled GameState!");
+                break;
         }
+    }
 
-        else if (GameStateManager.GameState == GameState.Dead)
+    // Handle logic for the Intro state
+    void HandleIntroState()
+    {
+        MoveBirdOnXAxis();
+
+        if (WasTouchedOrClicked())
         {
-            Vector2 contactPoint = Vector2.zero;
+            BoostOnYAxis();
+            GameStateManager.GameState = GameState.Playing;
+            IntroGUI.SetActive(false);
+            ScoreManagerScript.Score = 0;
+        }
+    }
 
-            if (Input.touchCount > 0)
-                contactPoint = Input.touches[0].position;
-            if (Input.GetMouseButtonDown(0))
-                contactPoint = Input.mousePosition;
+    // Handle logic for the Playing state
+    void HandlePlayingState()
+    {
+        MoveBirdOnXAxis();
 
-            // Check if user wants to restart the game
-            if (restartButtonGameCollider == Physics2D.OverlapPoint
-                (Camera.main.ScreenToWorldPoint(contactPoint)))
-            {
-                GameStateManager.GameState = GameState.Intro;
-                Application.LoadLevel(Application.loadedLevelName);
-            }
+        if (WasTouchedOrClicked())
+        {
+            BoostOnYAxis();
+        }
+    }
+
+    // Handle logic for the Dead state
+    void HandleDeadState()
+    {
+        Vector2 contactPoint = Vector2.zero;
+
+        if (Input.touchCount > 0)
+            contactPoint = Input.touches[0].position;
+
+        if (Input.GetMouseButtonDown(0))
+            contactPoint = Input.mousePosition;
+
+        // Check if user wants to restart the game
+        if (restartButtonGameCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(contactPoint)))
+        {
+            GameStateManager.GameState = GameState.Intro;
+            Application.LoadLevel(Application.loadedLevelName);
         }
     }
 
