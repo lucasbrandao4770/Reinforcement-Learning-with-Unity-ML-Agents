@@ -128,10 +128,10 @@ public class FlappyScript : MonoBehaviour
             // Notify subscribers about the checkpoint
             OnCollision?.Invoke(this, new CollisionEventArgs("Pipeblank"));
         }
-        else if (tag == "Pipe") // Level 1 -> No walls collision
-        //else if (tag == "Pipe" || tag == "Wall")
+        //else if (tag == "Pipe") // Level 1 -> No walls collision
+        else if (tag == "Pipe" || tag == "Wall") // Level 2 -> Walls collision
         {
-            //FlappyDies();
+            FlappyDies();
 
             // Notify subscribers about the game-ending collision
             OnCollision?.Invoke(this, new CollisionEventArgs(tag));

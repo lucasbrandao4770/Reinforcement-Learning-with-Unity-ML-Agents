@@ -871,7 +871,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: a20ae788bd8973c4f8d307e16fcaf6f0, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 2a66285e862fc4e4e896c5bf8f98f512, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 2
   m_BehaviorName: FlappyAgent
@@ -907,7 +907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Record: 1
+  Record: 0
   NumStepsToRecord: 0
   DemonstrationName: FlappyAgentDemo
   DemonstrationDirectory: Assets/FlappyBird/Demos
@@ -1161,8 +1161,8 @@ MonoBehaviour:
   SpawnObjects:
   - {fileID: 100006, guid: 18e45964d090c2a48bcfe78224c945ea, type: 3}
   - {fileID: 100006, guid: f8842601e1746c5428daa822630c8e9f, type: 3}
-  timeMin: 1.5
-  timeMax: 2.5
+  timeMin: 2.5
+  timeMax: 3.5
 --- !u!4 &906839455
 Transform:
   m_ObjectHideFlags: 0
