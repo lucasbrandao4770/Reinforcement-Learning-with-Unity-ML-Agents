@@ -8,10 +8,10 @@ public class ScoreManagerScript : MonoBehaviour
     public Sprite[] numberSprites;
     public SpriteRenderer Units, Tens, Hundreds;
 
-	void Start () {
-        (Tens.gameObject as GameObject).SetActive(false);
-        (Hundreds.gameObject as GameObject).SetActive(false);
-	}
+    void Awake()
+    {
+        ResetScore();
+    }
 
 	void Update () {
         if (previousScore != Score) // Save performance from non needed calculations
@@ -40,4 +40,18 @@ public class ScoreManagerScript : MonoBehaviour
             }
         }
 	}
+
+    public void ResetScore()
+    {
+        // Reset the score
+        Score = 0;
+        previousScore = -1;
+
+        // Deactivate Tens and Hundreds
+        (Tens.gameObject as GameObject).SetActive(false);
+        (Hundreds.gameObject as GameObject).SetActive(false);
+
+        // Reset Units to 0
+        Units.sprite = numberSprites[0];
+    }
 }

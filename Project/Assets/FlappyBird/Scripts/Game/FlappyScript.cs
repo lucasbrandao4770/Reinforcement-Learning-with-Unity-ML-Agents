@@ -16,7 +16,7 @@ public class FlappyScript : MonoBehaviour
     public float RotateUpSpeed = 1, RotateDownSpeed = 1;
     public GameObject IntroGUI, DeathGUI;
     public Collider2D restartButtonGameCollider;
-    public float VelocityPerJump = 3;
+    public float VelocityPerJump = 1.5f;
     public float XSpeed = 1;
     Vector3 birdRotation = Vector3.zero;
 
@@ -40,7 +40,7 @@ public class FlappyScript : MonoBehaviour
 
     void Start()
     {
-        GameStateManager.GameState = GameState.Intro;
+        GameStateManager.GameState = GameState.Playing;
         IntroGUI.SetActive(false);
         DeathGUI.SetActive(false);
     }
@@ -57,6 +57,7 @@ public class FlappyScript : MonoBehaviour
         // Use a switch statement to handle different game states
         switch (GameStateManager.GameState)
         {
+            /*
             case GameState.Intro:
                 HandleIntroState();
                 break;
@@ -68,9 +69,9 @@ public class FlappyScript : MonoBehaviour
             case GameState.Dead:
                 HandleDeadState();
                 break;
-
+            */
             default:
-                Debug.LogWarning("Unhandled GameState!");
+                HandlePlayingState();
                 break;
         }
     }
@@ -130,7 +131,7 @@ public class FlappyScript : MonoBehaviour
         else if (tag == "Pipe") // Level 1 -> No walls collision
         //else if (tag == "Pipe" || tag == "Wall")
         {
-            FlappyDies();
+            //FlappyDies();
 
             // Notify subscribers about the game-ending collision
             OnCollision?.Invoke(this, new CollisionEventArgs(tag));
@@ -163,9 +164,10 @@ public class FlappyScript : MonoBehaviour
 
     void FlappyDies()
     {
-        GameStateManager.GameState = GameState.Dead;
-        DeathGUI.SetActive(true);
+        //GameStateManager.GameState = GameState.Dead;
+        //DeathGUI.SetActive(true);
         GetComponent<AudioSource>().PlayOneShot(DeathAudioClip);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void MoveBirdOnXAxis()
@@ -226,7 +228,7 @@ public class FlappyScript : MonoBehaviour
     // ==============================================================
     //        API for the ML-Agents to control the Flappy Bird
     // ==============================================================
-    private float jumpCooldown = 0.5f; // Cooldown duration (in seconds)
+    private float jumpCooldown = 0.1f; // Cooldown duration (in seconds)
     private float lastJumpTime = -Mathf.Infinity; // Time of the last jump
 
     public void Jump()
@@ -246,14 +248,15 @@ public class FlappyScript : MonoBehaviour
                 break;
 
             case GameState.Intro:
-                BoostOnYAxis();
+                //BoostOnYAxis();
                 GameStateManager.GameState = GameState.Playing;
-                IntroGUI.SetActive(false);
-                ScoreManagerScript.Score = 0;
+                //IntroGUI.SetActive(false);
+                //ScoreManagerScript.Score = 0;
                 break;
 
             case GameState.Dead:
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                GameStateManager.GameState = GameState.Playing;
                 break;
         }
     }

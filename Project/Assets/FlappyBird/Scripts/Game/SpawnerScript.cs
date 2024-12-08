@@ -24,6 +24,6 @@ public class SpawnerScript : MonoBehaviour
             GameObject go = Instantiate(SpawnObject, this.transform.position + new Vector3(0, 0, 0), Quaternion.identity) as GameObject; // Level 1
         }
         //Invoke("Spawn", Random.Range(timeMin, timeMax)); // Original
-        Invoke("Spawn", 2f); // Level 1
+        Invoke("Spawn", 3f); // Level 1
     }
 }
