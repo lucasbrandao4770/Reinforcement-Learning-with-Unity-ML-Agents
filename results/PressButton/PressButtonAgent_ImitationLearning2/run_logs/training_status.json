@@ -1,0 +1,65 @@
+{
+    "PressButtonAgent": {
+        "checkpoints": [
+            {
+                "steps": 29997,
+                "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-29997.onnx",
+                "reward": null,
+                "creation_time": 1733335430.6320567,
+                "auxillary_file_paths": [
+                    "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-29997.pt"
+                ]
+            },
+            {
+                "steps": 39988,
+                "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-39988.onnx",
+                "reward": null,
+                "creation_time": 1733335444.852688,
+                "auxillary_file_paths": [
+                    "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-39988.pt"
+                ]
+            },
+            {
+                "steps": 49944,
+                "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-49944.onnx",
+                "reward": 3.2110007405281067,
+                "creation_time": 1733335458.2790773,
+                "auxillary_file_paths": [
+                    "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-49944.pt"
+                ]
+            },
+            {
+                "steps": 59945,
+                "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-59945.onnx",
+                "reward": 0.3150002360343933,
+                "creation_time": 1733335472.5052235,
+                "auxillary_file_paths": [
+                    "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-59945.pt"
+                ]
+            },
+            {
+                "steps": 63503,
+                "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-63503.onnx",
+                "reward": -1.9050001055002213,
+                "creation_time": 1733335477.4892602,
+                "auxillary_file_paths": [
+                    "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-63503.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 63503,
+            "file_path": "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent.onnx",
+            "reward": -1.9050001055002213,
+            "creation_time": 1733335477.4892602,
+            "auxillary_file_paths": [
+                "results\\PressButtonAgent_ImitationLearning2\\PressButtonAgent\\PressButtonAgent-63503.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

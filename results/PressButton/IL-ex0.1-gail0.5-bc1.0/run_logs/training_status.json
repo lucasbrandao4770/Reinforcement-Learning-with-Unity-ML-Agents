@@ -1,0 +1,65 @@
+{
+    "PressButtonAgent": {
+        "checkpoints": [
+            {
+                "steps": 19975,
+                "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-19975.onnx",
+                "reward": 0.5447251806035638,
+                "creation_time": 1733332667.9990058,
+                "auxillary_file_paths": [
+                    "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-19975.pt"
+                ]
+            },
+            {
+                "steps": 29970,
+                "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-29970.onnx",
+                "reward": 0.2594001293182373,
+                "creation_time": 1733332681.883147,
+                "auxillary_file_paths": [
+                    "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-29970.pt"
+                ]
+            },
+            {
+                "steps": 39938,
+                "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-39938.onnx",
+                "reward": 1.9311001896858215,
+                "creation_time": 1733332695.1179218,
+                "auxillary_file_paths": [
+                    "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-39938.pt"
+                ]
+            },
+            {
+                "steps": 49972,
+                "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-49972.onnx",
+                "reward": 0.8442501798272133,
+                "creation_time": 1733332709.261681,
+                "auxillary_file_paths": [
+                    "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-49972.pt"
+                ]
+            },
+            {
+                "steps": 50036,
+                "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-50036.onnx",
+                "reward": 0.8442501798272133,
+                "creation_time": 1733332709.3311434,
+                "auxillary_file_paths": [
+                    "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-50036.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 50036,
+            "file_path": "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent.onnx",
+            "reward": 0.8442501798272133,
+            "creation_time": 1733332709.3311434,
+            "auxillary_file_paths": [
+                "results\\IL-ex0.1-gail0.5-bc1.0\\PressButtonAgent\\PressButtonAgent-50036.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}
