@@ -10,7 +10,7 @@ public class FlappyAgent : Agent
 
     public override void Initialize()
     {
-        flappy = GetComponentInChildren<FlappyScript>();
+        flappy = GetComponent<FlappyScript>();
 
         // Subscribe to the collision event
         flappy.OnCollision += HandleFlappyCollision;
@@ -21,23 +21,30 @@ public class FlappyAgent : Agent
         if (e.Tag == "Pipeblank")
         {
             AddReward(1.0f); // Reward for passing a checkpoint
+            Debug.Log("Checkpoint passed!");
         }
-        else if (e.Tag == "Pipe" || e.Tag == "Floor")
+        else if (e.Tag == "Pipe" || e.Tag == "Wall")
         {
+            Debug.Log("Bird hit an obstacle!");
             AddReward(-1.0f); // Penalty for hitting an obstacle
-            EndEpisode(); // End the episode
+            //EndEpisode(); // The episode is ended when the scene is reset
         }
     }
 
-    public override void OnEpisodeBegin()
-    {
-        ResetFlappy();
-    }
-
-    // Collect observations about the environment
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Functionality to be added later
+        // Add bird's normalized height
+        float normalizedHeight = Mathf.Clamp(flappy.GetHeight() / 10f, 0f, 1f); // Assuming 10 is the max height
+        sensor.AddObservation(normalizedHeight);
+
+        // Add bird's normalized velocity
+        Vector2 velocity = flappy.GetVelocity();
+        sensor.AddObservation(velocity.x / 5f); // Assuming max X speed is 5
+        sensor.AddObservation(velocity.y / 5f); // Assuming max Y speed is 5
+
+        // Add distance to the next pipe (normalized)
+        float distanceToPipe = GetDistanceToNextPipe();
+        sensor.AddObservation(distanceToPipe / 10f); // Assuming 10 is the max distance to the next pipe
     }
 
     // Perform actions based on decisions made by the model
@@ -45,29 +52,36 @@ public class FlappyAgent : Agent
     {
         bool doJump = actions.DiscreteActions[0] == 1;
 
-        if (doJump)
-        {
+        if (doJump) {
             flappy.Jump();
         }
-
-
-
-        CheckEpisodeEndConditions();
     }
 
-    // Optional: Manual control for testing the agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        // Functionality to be added later
+        ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+        discreteActions[0] = flappy.WasTouchedOrClicked() ? 1 : 0;
     }
 
-    private void ResetFlappy()
+    private float GetDistanceToNextPipe()
     {
-        //#TODO: should request the flappy script to reset the game state
-    }
+        GameObject[] pipes = GameObject.FindGameObjectsWithTag("Pipeblank");
+        float birdX = transform.position.x;
 
-    private void CheckEpisodeEndConditions()
-    {
-        // Placeholder: End the episode if the bird hits the ground, a pipe, or goes out of bounds
+        float nearestDistance = float.MaxValue;
+        foreach (GameObject pipe in pipes)
+        {
+            float pipeX = pipe.transform.position.x;
+            if (pipeX > birdX) // Only consider pipes ahead of the bird
+            {
+                float distance = pipeX - birdX;
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                }
+            }
+        }
+
+        return nearestDistance == float.MaxValue ? 10f : nearestDistance; // Default to max distance if no pipes are found
     }
 }

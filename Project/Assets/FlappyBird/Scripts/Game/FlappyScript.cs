@@ -72,6 +72,7 @@ public class FlappyScript : MonoBehaviour
     void HandleIntroState()
     {
         MoveBirdOnXAxis();
+        IntroGUI.SetActive(true);
 
         if (WasTouchedOrClicked())
         {
@@ -122,7 +123,7 @@ public class FlappyScript : MonoBehaviour
             // Notify subscribers about the checkpoint
             OnCollision?.Invoke(this, new CollisionEventArgs("Pipeblank"));
         }
-        else if (tag == "Pipe" || tag == "Floor")
+        else if (tag == "Pipe" || tag == "Floor") // #TODO: Change to Wall later
         {
             FlappyDies();
 
@@ -142,17 +143,24 @@ public class FlappyScript : MonoBehaviour
         }
         else if (GameStateManager.GameState == GameState.Playing || GameStateManager.GameState == GameState.Dead)
         {
-            FixFlappyRotation();
+            //FixFlappyRotation();
         }
     }
 
-    bool WasTouchedOrClicked()
+    public bool WasTouchedOrClicked()
     {
         if (Input.GetButtonUp("Jump") || Input.GetMouseButtonDown(0) ||
             (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended))
             return true;
         else
             return false;
+    }
+
+    void FlappyDies()
+    {
+        GameStateManager.GameState = GameState.Dead;
+        DeathGUI.SetActive(true);
+        GetComponent<AudioSource>().PlayOneShot(DeathAudioClip);
     }
 
     void MoveBirdOnXAxis()
@@ -210,29 +218,38 @@ public class FlappyScript : MonoBehaviour
             HandleCollision(col.gameObject.tag);
     }
 
-
-    void FlappyDies()
-    {
-        GameStateManager.GameState = GameState.Dead;
-        DeathGUI.SetActive(true);
-        GetComponent<AudioSource>().PlayOneShot(DeathAudioClip);
-    }
-
     // ==============================================================
     //        API for the ML-Agents to control the Flappy Bird
     // ==============================================================
 
     public void Jump()
     {
-        if (GameStateManager.GameState == GameState.Playing)
+        switch (GameStateManager.GameState)
         {
-            BoostOnYAxis();
+            case GameState.Playing:
+                BoostOnYAxis();
+                break;
+
+            case GameState.Intro:
+                BoostOnYAxis();
+                GameStateManager.GameState = GameState.Playing;
+                IntroGUI.SetActive(false);
+                ScoreManagerScript.Score = 0;
+                break;
+
+            case GameState.Dead:
+                GameStateManager.GameState = GameState.Intro;
+                break;
         }
     }
 
-    public void ResetGame()
+    public float GetHeight()
     {
-        GameStateManager.GameState = GameState.Intro;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        return transform.position.y;
+    }
+
+    public Vector2 GetVelocity()
+    {
+        return GetComponent<Rigidbody2D>().velocity;
     }
 }

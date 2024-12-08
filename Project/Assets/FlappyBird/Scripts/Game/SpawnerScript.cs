@@ -5,8 +5,8 @@ public class SpawnerScript : MonoBehaviour
 {
     private GameObject SpawnObject;
     public GameObject[] SpawnObjects;
-    public float timeMin = 0.7f;
-    public float timeMax = 2f;
+    public float timeMin = 1.5f;
+    public float timeMax = 2.5f;
 
     void Start()
     {
