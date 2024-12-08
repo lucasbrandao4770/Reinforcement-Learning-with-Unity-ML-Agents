@@ -38,6 +38,13 @@ public class FlappyScript : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        GameStateManager.GameState = GameState.Intro;
+        IntroGUI.SetActive(false);
+        DeathGUI.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -76,10 +83,7 @@ public class FlappyScript : MonoBehaviour
 
         if (WasTouchedOrClicked())
         {
-            BoostOnYAxis();
-            GameStateManager.GameState = GameState.Playing;
-            IntroGUI.SetActive(false);
-            ScoreManagerScript.Score = 0;
+            Jump();
         }
     }
 
@@ -90,7 +94,7 @@ public class FlappyScript : MonoBehaviour
 
         if (WasTouchedOrClicked())
         {
-            BoostOnYAxis();
+            Jump();
         }
     }
 
@@ -123,7 +127,8 @@ public class FlappyScript : MonoBehaviour
             // Notify subscribers about the checkpoint
             OnCollision?.Invoke(this, new CollisionEventArgs("Pipeblank"));
         }
-        else if (tag == "Pipe" || tag == "Floor") // #TODO: Change to Wall later
+        else if (tag == "Pipe") // Level 1 -> No walls collision
+        //else if (tag == "Pipe" || tag == "Wall")
         {
             FlappyDies();
 
@@ -221,9 +226,19 @@ public class FlappyScript : MonoBehaviour
     // ==============================================================
     //        API for the ML-Agents to control the Flappy Bird
     // ==============================================================
+    private float jumpCooldown = 0.5f; // Cooldown duration (in seconds)
+    private float lastJumpTime = -Mathf.Infinity; // Time of the last jump
 
     public void Jump()
     {
+        // Check if cooldown has passed
+        if (Time.time - lastJumpTime < jumpCooldown)
+        {
+            return;
+        }
+
+        // Update the last jump time to the current time
+        lastJumpTime = Time.time;
         switch (GameStateManager.GameState)
         {
             case GameState.Playing:
@@ -238,7 +253,7 @@ public class FlappyScript : MonoBehaviour
                 break;
 
             case GameState.Dead:
-                GameStateManager.GameState = GameState.Intro;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 break;
         }
     }

@@ -2,6 +2,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class FlappyAgent : Agent
@@ -21,11 +22,9 @@ public class FlappyAgent : Agent
         if (e.Tag == "Pipeblank")
         {
             AddReward(1.0f); // Reward for passing a checkpoint
-            Debug.Log("Checkpoint passed!");
         }
         else if (e.Tag == "Pipe" || e.Tag == "Wall")
         {
-            Debug.Log("Bird hit an obstacle!");
             AddReward(-1.0f); // Penalty for hitting an obstacle
             //EndEpisode(); // The episode is ended when the scene is reset
         }
@@ -60,7 +59,15 @@ public class FlappyAgent : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
-        discreteActions[0] = flappy.WasTouchedOrClicked() ? 1 : 0;
+
+        // Default action: no jump (0)
+        discreteActions[0] = 0;
+
+        // Check for manual input to trigger a jump (set to 1)
+        if (Keyboard.current.spaceKey.IsPressed())
+        {
+            discreteActions[0] = 1;
+        }
     }
 
     private float GetDistanceToNextPipe()
